@@ -9,7 +9,7 @@ class Game:
         self.width = 1200
         self.height = 700
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemys = [Scorpion(), Club(), Wizard()]
+        self.enemys = [Club()]
         self.towers = []
         self.lives = 10
         self.money = 100
@@ -21,8 +21,8 @@ class Game:
         run = True
         clock = pygame.time.Clock()
         while run:
-            pygame.time.delay(500)
-            clock.tick(30)
+            #pygame.time.delay(500)
+            clock.tick(100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
@@ -34,7 +34,7 @@ class Game:
             #loop through enemies
             to_del = []
             for en in self.enemys:
-                if en.x < -5:
+                if en.x < -15:
                     to_del.append(en)
 
             #delete all enemies off the screen
