@@ -3,14 +3,15 @@ import os
 from enemies.scorpion import Scorpion
 from enemies.club import Club
 from enemies.wizard import Wizard
+from towers.archerTower import ArcherTowerLong
 
 class Game:
     def __init__(self):
         self.width = 1200
         self.height = 700
         self.win = pygame.display.set_mode((self.width, self.height))
-        self.enemys = [Club()]
-        self.towers = []
+        self.enemys = [Wizard()]
+        self.towers = [ArcherTowerLong(300,200)]
         self.lives = 10
         self.money = 100
         self.bg = pygame.image.load(os.path.join("game_assets", "bg.png"))
@@ -41,6 +42,10 @@ class Game:
             for d in to_del:
                 self.enemys.remove(d)
 
+            #loop through towers
+            for tw in self.towers:
+                tw.attack(self.enemys)
+
             self.draw()
 
         pygame.quit()
@@ -52,6 +57,10 @@ class Game:
         #draw enemies
         for en in self.enemys:
             en.draw(self.win)
+
+        # draw towers
+        for tw in self.towers:
+            tw.draw(self.win)
 
         pygame.display.update()
 g = Game()
