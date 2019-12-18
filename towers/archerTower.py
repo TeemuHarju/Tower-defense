@@ -2,27 +2,32 @@ import pygame
 from .tower import Tower
 import os
 import math
+import time
+
+tower_imgs1 = []
+archer_imgs1 = []
+# load archer tower images
+for x in range(7, 10):
+    tower_imgs1.append(pygame.transform.scale(
+        pygame.image.load(os.path.join("game_assets/archer_towers/archer_1", str(x) + ".png")),
+        (90, 90)))
+
+# load archer images
+for x in range(38, 44):
+    archer_imgs1.append(
+        pygame.image.load(os.path.join("game_assets/archer_towers/archer_top", str(x) + ".png")))
+
 
 class ArcherTowerLong(Tower):
     def __init__(self, x, y):
         super().__init__(x, y)
-        self.tower_imgs = []
-        self.archer_imgs = []
+        self.tower_imgs = tower_imgs1[:]
+        self.archer_imgs = archer_imgs1[:]
         self.archer_count = 0
         self.range = 200
         self.inRange = False
         self.left = True
-
-        # load archer tower images
-        for x in range(7,10):
-            self.tower_imgs.append(pygame.transform.scale(
-                pygame.image.load(os.path.join("game_assets/archer_towers/archer_1", str(x) + ".png")),
-                (90, 90)))
-
-        # load archer images
-        for x in range(38,44):
-            self.archer_imgs.append(
-                pygame.image.load(os.path.join("game_assets/archer_towers/archer_top", str(x) + ".png")))
+        self.damage = 1
 
     def draw(self, win):
         # draw change circle
@@ -43,7 +48,7 @@ class ArcherTowerLong(Tower):
         if self.left == True:
             add = -25
         else:
-            add = -archer.get_width() / 2
+            add = -archer.get_width() + 10
         win.blit(archer, ((self.x + self.width / 2 + add), (self.y - archer.get_height() - 25)))
 
     def change_range(self, r):
@@ -71,9 +76,12 @@ class ArcherTowerLong(Tower):
                 self.inRange = True
                 enemy_closest.append(enemy)
 
-        enemy_closest.sort(key=lambda  x: x.x)
+        enemy_closest.sort(key=lambda x: x.x)
         if len(enemy_closest) > 0:
             first_enemy = enemy_closest[0]
+            if self.archer_count == 6:
+                if first_enemy.hit(self.damage) == True:
+                    enemies.remove(first_enemy)
 
             if first_enemy.x > self.x and not(self.left):
                 self.left = True
@@ -85,6 +93,29 @@ class ArcherTowerLong(Tower):
                     self.archer_imgs[x] = pygame.transform.flip(img, True, False)
 
 
+tower_imgs = []
+archer_imgs = []
+# load archer tower images
+for x in range(10,13):
+    tower_imgs.append(pygame.transform.scale(
+        pygame.image.load(os.path.join("game_assets/archer_towers/archer_2", str(x) + ".png")),
+        (90, 90)))
+
+# load archer images
+for x in range(51,57):
+    archer_imgs.append(
+        pygame.image.load(os.path.join("game_assets/archer_towers/archer_top_2", str(x) + ".png")))
+
+class ArcherTowerShort(ArcherTowerLong):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.tower_imgs = tower_imgs[:]
+        self.archer_imgs = archer_imgs[:]
+        self.archer_count = 0
+        self.range = 100
+        self.inRange = False
+        self.left = True
+        self.damage = 2
 
 
 
