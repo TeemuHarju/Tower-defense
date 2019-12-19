@@ -13,7 +13,6 @@ pygame.font.init()
 lives_img = pygame.image.load(os.path.join("game_assets", "heart.png"))
 star_img = pygame.image.load(os.path.join("game_assets", "star.png"))
 
-
 class Game:
     def __init__(self):
         self.width = 1250
@@ -28,6 +27,7 @@ class Game:
         self.bg = pygame.transform.scale(self.bg, (self.width, self.height))
         self.timer = time.time()
         self.life_font = pygame.font.SysFont("comicsans", 70)
+        self.selected_tower = None
 
     def run(self):
         run = True
@@ -44,7 +44,23 @@ class Game:
                 pos = pygame.mouse.get_pos()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    pass
+                    # look if you clicked on attack tower
+                    for tw in self.attack_towers:
+                        if tw.click(pos[0], pos[1]):
+                            tw.selected = True
+                            self.selected_tower = tw
+                        else:
+                            tw.selected = False
+
+                    # look if you clicked on support tower
+                    for tw in self.support_towers:
+                        if tw.click(pos[0], pos[1]):
+                            tw.selected = True
+                            self.selected_tower = tw
+                        else:
+                            tw.selected = False
+
+
             # loop through enemies
             to_del = []
             for en in self.enemys:
