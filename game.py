@@ -89,7 +89,10 @@ class Game:
                         # look if you clicked on side menu
                         side_menu_button = self.menu.get_clicked(pos[0], pos[1])
                         if side_menu_button:
-                            self.add_tower(side_menu_button)
+                            cost = self.menu.get_item_cost(side_menu_button)
+                            if self.money >= cost:
+                                self.money -= cost
+                                self.add_tower(side_menu_button)
 
                         # look if you clicked on attack tower or support tower
                         btn_clicked = None
