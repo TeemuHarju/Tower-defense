@@ -1,6 +1,7 @@
 import pygame
 from menu.menu import Menu
 import os
+import math
 
 menu_bg = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "menu.png")), (120, 70))
 upgrade_btn = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "upgrade.png")), (50, 50))
@@ -83,5 +84,24 @@ class Tower():
         return self.price[self.level - 1]
 
     def move(self, x, y):
+        """
+        moves tower to given x and y
+        @param x: int
+        @param y: int
+        @return: None
+        """
         self.x = x
         self.y = y
+        self.menu.x = x
+        self.menu.y = y
+        self.menu.update()
+
+    def collide(self, otherTower):
+        x2 = otherTower.x
+        y2 = otherTower.y
+
+        dis = math.sqrt((x2 - self.x)**2 + (y2 - self.y)**2)
+        if dis >= 100:
+            return False
+        else:
+            return True
