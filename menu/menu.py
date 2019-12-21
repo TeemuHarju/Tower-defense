@@ -3,6 +3,7 @@ import os
 pygame.font.init()
 
 star = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "star.png")), (50, 50))
+star2 = pygame.transform.scale(pygame.image.load(os.path.join("game_assets", "star.png")), (20, 20))
 
 class Button:
     """
@@ -30,6 +31,14 @@ class Button:
 
     def draw(self, win):
         win.blit(self.img, (self.x, self.y))
+
+class VerticalButton(Button):
+    """
+    Vertical button class for menu object
+    """
+    def __init__(self, x, y, img, name, cost):
+        super().__init__(x, y, img, name)
+        self.cost = cost
 
 
 class Menu:
@@ -60,6 +69,25 @@ class Menu:
         btn_y = self.y - 120 + 10
         self.buttons.append(Button(btn_x, btn_y, img, name))
 
+    def get_item_cost(self):
+        """
+        gets cost of upgrade to next level
+        @return: int
+        """
+        return self.item_cost[self.tower.level - 1]
+
+    def click(self, X, Y):
+        """
+        returns if the position has collided with the menu
+        @param X: int
+        @param Y: int
+        @return: bool
+        """
+        if X <= self.x + self.width and X >= self.x:
+            if Y <= self.y + self.height and Y >= self.y:
+                return True
+        return False
+
     def draw(self, win):
         """
         draws buttons and menu bg
@@ -85,16 +113,50 @@ class Menu:
                 return btn.name
         return None
 
-    def click(self, X, Y):
+
+class VerticalMenu(Menu):
+    """
+    Vertical menu for side bar of game
+    """
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.width = img.get_width()
+        self.height = img.get_height()
+        self.buttons = []
+        self.items = 0
+        self.bg = img
+        self.font = pygame.font.SysFont("comicsans", 25)
+
+    def add_btn(self, img, name, cost):
         """
-        returns if the position has collided with the menu
-        @param X: int
-        @param Y: int
-        @return: bool
+        adds button to menu
+        @param img: surface
+        @param name: str
+        @return: None
         """
-        if X <= self.x + self.width and X >= self.x:
-            if Y <= self.y + self.height and Y >= self.y:
-                return True
-        return False
+        self.items += 1
+        btn_x = self.x - 40
+        btn_y = self.y - 100 + (self.items - 1) * 120
+        self.buttons.append(VerticalButton(btn_x, btn_y, img, name, cost))
+
+    def get_item_cost(self):
+        return Exception("Not implemented")
+
+    def draw(self, win):
+        """
+        draws buttons and menu bg
+        @param win: surface
+        @return: None
+        """
+        win.blit(self.bg, (self.x - self.bg.get_width() / 2, self.y - 120))
+        for item in self.buttons:
+            item.draw(win)
+            win.blit(star2, (item.x + 2, item.y + item.height))
+            text = self.font.render(str(item.cost), 1, (255, 255, 255))
+            win.blit(text, (item.x + item.width / 2 - text.get_width() / 2 + 7, item.y + item.height + 5))
+
+
+
 
 

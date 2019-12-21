@@ -39,6 +39,9 @@ class ArcherTowerLong(Tower):
         self.menu = Menu(self, self.x, self.y, menu_bg, [2000, 5000, "MAX"])
         self.menu.add_btn(upgrade_btn, "Upgrade")
 
+    def get_upgrade_cost(self):
+        return self.menu.get_item_cost()
+
     def draw(self, win):
         super().draw_radious(win)
         super().draw(win)
@@ -71,6 +74,7 @@ class ArcherTowerLong(Tower):
         @param enemies: list on enemies
         @return: None
         """
+        money = 0
         self.inRange = False
         enemy_closest = []
         for enemy in enemies:
@@ -87,6 +91,7 @@ class ArcherTowerLong(Tower):
             first_enemy = enemy_closest[0]
             if self.archer_count == 6:
                 if first_enemy.hit(self.damage) == True:
+                    money = first_enemy.money
                     enemies.remove(first_enemy)
 
             if first_enemy.x > self.x and not(self.left):
@@ -97,6 +102,8 @@ class ArcherTowerLong(Tower):
                 self.left = False
                 for x, img in enumerate(self.archer_imgs):
                     self.archer_imgs[x] = pygame.transform.flip(img, True, False)
+
+        return money
 
 
 tower_imgs = []
